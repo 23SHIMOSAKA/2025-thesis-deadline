@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>修士論文締め切りカウントダウン</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg-gradient: radial-gradient(circle at top, #0f73ff 0%, #020024 70%);
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(255, 255, 255, 0.2);
+      --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      --accent: #9bd4ff;
+      --text-main: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.75);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      padding: 2rem;
+      transition: background 0.8s ease, color 0.8s ease;
+    }
+
+    main {
+      width: min(720px, 100%);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(12px);
+      padding: clamp(2rem, 4vw, 3rem);
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      letter-spacing: 0.05em;
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 2rem;
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
+      /* font-weight: 500; */
+      /* color: var(--text-muted); */
+    }
+
+
+    .deadline-info {
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .countdown-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .unit-card {
+      padding: 1.5rem 1rem;
+      background: var(--card-bg);
+      border-radius: 18px;
+      border: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .value {
+      font-size: clamp(2.5rem, 6vw, 3.4rem);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+      text-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    .label {
+      font-size: clamp(0.95rem, 2.3vw, 1.1rem);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .status {
+      margin-top: 2.5rem;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      color: var(--text-muted);
+    }
+
+    footer {
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    body.urgency-calm {
+      --bg-gradient: radial-gradient(circle at top, #0f73ff 0%, #020024 70%);
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(255, 255, 255, 0.2);
+      --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      --accent: #9bd4ff;
+      --text-main: #ffffff;
+      --text-muted: rgba(255, 255, 255, 0.75);
+    }
+
+    body.urgency-focused {
+      --bg-gradient: radial-gradient(circle at top, #ffa04c 0%, #230600 72%);
+      --card-bg: rgba(45, 18, 0, 0.55);
+      --card-border: rgba(255, 184, 112, 0.35);
+      --card-shadow: 0 20px 40px rgba(94, 31, 0, 0.55);
+      --accent: #ffd06b;
+      --text-main: #fff4e6;
+      --text-muted: rgba(255, 225, 200, 0.85);
+    }
+
+    body.urgency-critical {
+      --bg-gradient: radial-gradient(circle at top, #ff4e4e 0%, #1a0004 65%);
+      --card-bg: rgba(64, 6, 6, 0.6);
+      --card-border: rgba(255, 120, 120, 0.4);
+      --card-shadow: 0 28px 50px rgba(132, 8, 8, 0.6);
+      --accent: #ff9c9c;
+      --text-main: #ffeaea;
+      --text-muted: rgba(255, 220, 220, 0.9);
+    }
+
+    body.urgency-complete {
+      --bg-gradient: radial-gradient(circle at top, #0fbc7b 0%, #012619 65%);
+      --card-bg: rgba(3, 60, 36, 0.6);
+      --card-border: rgba(155, 255, 210, 0.35);
+      --card-shadow: 0 24px 46px rgba(9, 78, 51, 0.55);
+      --accent: #9effc4;
+      --text-main: #eafff6;
+      --text-muted: rgba(210, 255, 235, 0.88);
+    }
+  </style>
+</head>
+<body class="urgency-calm">
+  <main>
+    <p class="deadline-info">DEAD LINE: 2026/1/26 16:59 (JST)</p>
+    <h1>修士論文の締め切りまで</h1>
+    <h2>残り</h2>
+    <section class="countdown-grid" aria-live="polite" aria-label="締め切りまでの残り時間">
+      <article class="unit-card">
+        <div id="days" class="value">0</div>
+        <div class="label">Days</div>
+      </article>
+      <article class="unit-card">
+        <div id="hours" class="value">0</div>
+        <div class="label">Hours</div>
+      </article>
+      <article class="unit-card">
+        <div id="minutes" class="value">0</div>
+        <div class="label">Minutes</div>
+      </article>
+      <article class="unit-card">
+        <div id="seconds" class="value">0</div>
+        <div class="label">Seconds</div>
+      </article>
+    </section>
+    <p id="status" class="status"></p>
+    <footer>
+      <a href="https://23SHIMOSAKA.github.io/2025-thesis-deadline"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+          class="fill-current">
+          <title>GitHub</title>
+          <path
+            d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12">
+          </path>
+        </svg></a>
+    </footer>
+  </main>
+
+  <script>
+    const deadline = new Date('2026-01-26T07:59:00Z'); // 2026-01-26 16:59 JST
+    const bodyEl = document.body;
+    const daysEl = document.getElementById('days');
+    const hoursEl = document.getElementById('hours');
+    const minutesEl = document.getElementById('minutes');
+    const secondsEl = document.getElementById('seconds');
+    const statusEl = document.getElementById('status');
+    const urgencyClasses = ['urgency-calm', 'urgency-focused', 'urgency-critical', 'urgency-complete'];
+
+    function formatNumber(value) {
+      return value.toString().padStart(2, '0');
+    }
+
+    function applyUrgencyTheme(remainingDays) {
+      // Update visual tone and messaging based on remaining days.
+      bodyEl.classList.remove(...urgencyClasses);
+
+      if (remainingDays <= 30) {
+        bodyEl.classList.add('urgency-critical');
+        statusEl.textContent = '締め切り直前です。全力で仕上げましょう！';
+      } else if (remainingDays <= 60) {
+        bodyEl.classList.add('urgency-focused');
+        statusEl.textContent = '締め切りが見えてきました。計画的に進めましょう。';
+      } else {
+        bodyEl.classList.add('urgency-calm');
+        statusEl.textContent = '提出までがんばりましょう！';
+      }
+    }
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = deadline.getTime() - now.getTime();
+
+      if (diff <= 0) {
+        daysEl.textContent = '00';
+        hoursEl.textContent = '00';
+        minutesEl.textContent = '00';
+        secondsEl.textContent = '00';
+        bodyEl.classList.remove(...urgencyClasses);
+        bodyEl.classList.add('urgency-complete');
+        statusEl.textContent = '提出お疲れさまでした！';
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / (24 * 3600));
+      const hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      const remainingDays = totalSeconds / (24 * 3600);
+
+      daysEl.textContent = formatNumber(days);
+      hoursEl.textContent = formatNumber(hours);
+      minutesEl.textContent = formatNumber(minutes);
+      secondsEl.textContent = formatNumber(seconds);
+
+      applyUrgencyTheme(remainingDays);
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
