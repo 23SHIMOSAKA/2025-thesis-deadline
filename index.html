@@ -162,7 +162,7 @@
 </head>
 <body class="urgency-calm">
   <main>
-    <p class="deadline-info">DEAD LINE: 2026/1/21 16:59 (JST)</p>
+    <p class="deadline-info">DEAD LINE: <span id="deadline-text"></span> (JST)</p>
     <h1>修士論文の締め切りまで</h1>
     <h2>残り</h2>
     <section class="countdown-grid" aria-live="polite" aria-label="締め切りまでの残り時間">
@@ -185,7 +185,7 @@
     </section>
     <p id="status" class="status"></p>
     <footer>
-      <a href="https://23SHIMOSAKA.github.io/2025-thesis-deadline"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+      <a href="https://23SHIMOSAKA.github.io/jouhou-thesis-deadline"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
           class="fill-current">
           <title>GitHub</title>
           <path
@@ -196,18 +196,34 @@
   </main>
 
   <script>
-    const deadline = new Date('2026-01-21T06:59:00Z'); // 2026-01-21 15:59 JST
+    const deadlineJst = {
+      year: 2027,
+      month: 1,
+      day: 21,
+      hour: 15,
+      minute: 59
+    };
+    const deadline = new Date(Date.UTC(
+      deadlineJst.year,
+      deadlineJst.month - 1,
+      deadlineJst.day,
+      deadlineJst.hour - 9,
+      deadlineJst.minute
+    )); // JST to UTC
     const bodyEl = document.body;
     const daysEl = document.getElementById('days');
     const hoursEl = document.getElementById('hours');
     const minutesEl = document.getElementById('minutes');
     const secondsEl = document.getElementById('seconds');
     const statusEl = document.getElementById('status');
+    const deadlineTextEl = document.getElementById('deadline-text');
     const urgencyClasses = ['urgency-calm', 'urgency-focused', 'urgency-critical', 'urgency-complete'];
 
     function formatNumber(value) {
       return value.toString().padStart(2, '0');
     }
+
+    deadlineTextEl.textContent = `${deadlineJst.year}/${deadlineJst.month}/${deadlineJst.day} ${formatNumber(deadlineJst.hour)}:${formatNumber(deadlineJst.minute)}`;
 
     function applyUrgencyTheme(remainingDays) {
       // Update visual tone and messaging based on remaining days.
